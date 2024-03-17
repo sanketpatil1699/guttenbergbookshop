@@ -53,7 +53,7 @@ def getBooksData(request):
                 sortingDownloadCount = sorted(allDetails, key=lambda x: x['download_count'], reverse=True)
         
         #DropdownList 
-        bookSub = BooksSubject.objects.all()
+        bookSub = BooksSubject.objects.all()[0:200]
         for SubjectData in bookSub:
             subInfo ={
                 'name': SubjectData.name,
