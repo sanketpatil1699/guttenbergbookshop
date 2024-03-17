@@ -4,20 +4,29 @@ from django.http import HttpResponse
 import sys
 from rest_framework.decorators import action
 
-subjData = []
-allDetails = []
-a=0
-b=20
 @action(methods=["Post"], detail=False)
 def getBooksData(request):
+    """
+    Author : Sanket Patil.
+    Date : 17-03-2024
+    The function `getBooksData` retrieves and processes data related to books and authors based on user
+    input, and handles exceptions if any occur.
+    
+    :param request: The given code snippet is a Python function that retrieves data related to books
+    based on a selected subject name from a dropdown menu in a web application. Here's a breakdown of
+    the code:
+    :return: The `getBooksData` function is returning a rendered HTML template named 'dash.html' with
+    the context data containing the list of subjects (`subjData`) and the sorted list of book details
+    (`sortingDownloadCount`).
+    """
     try:
-    # subjData = []
-    # allDetails = []
-        global subjData, allDetails  # Assuming you want to keep the data persistent across requests
+        global subjData, allDetails,sortingDownloadCount
         subjData = []
         allDetails = []
         sortingDownloadCount=[]
-        selected_name = request.POST.get('selected_name')
+        selected_name = request.POST.get('selected_name') #selected_name getting which one is selected from dropdown.
+        
+        # Bewlow functionality is for colleting all data from various table. 
         if selected_name != '' and selected_name != None:
             idSubject  = BooksSubject.objects.filter(name = selected_name).first()
             BookId = BookbookSubject.objects.filter(subject_id = idSubject.id).values_list('book_id', flat=True)
@@ -42,7 +51,9 @@ def getBooksData(request):
                         }
                     allDetails.append(details)
                 sortingDownloadCount = sorted(allDetails, key=lambda x: x['download_count'], reverse=True)
-        bookSub = BooksSubject.objects.all()[0:20]
+        
+        #DropdownList 
+        bookSub = BooksSubject.objects.all()
         for SubjectData in bookSub:
             subInfo ={
                 'name': SubjectData.name,

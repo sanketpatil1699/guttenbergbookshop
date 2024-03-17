@@ -2,6 +2,7 @@
 {% load static %}
 <html>
 <head>
+    <!-- Used Bootstrap and CSS for table-->
     <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
     <style>
@@ -23,8 +24,8 @@
 </head>
 <body>
 
-<p>Legend Solution</p>
-
+<p>Online Book Shop</p>
+<!--Form is for Dropdown, Search Search by Title or Author Name-->
 <form id="myForm" method="post" action="{% url 'getBooksData' %}">
     {% csrf_token %}
     <div>
@@ -34,9 +35,11 @@
                 <option value="{{ value.name }}">{{ value.name }}</option>
             {% endfor %}
         </select>
+        <label for="cars">Search by Title or Author Name:</label>
         <input type="text" id="searchInput" onkeyup="searchFunction()" placeholder="Search...">
     </div>
 </form>
+<!-- table,th,td for all data stored in table-->
 {% if authDetails %}
     <table class="table table-bordered">
         <thead>
@@ -70,6 +73,7 @@
     <p>No author details found.</p>
 {% endif %}
 
+<!-- functions for search and submit-->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 <script>
