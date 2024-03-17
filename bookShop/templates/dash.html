@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 5px;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+
+<p>Legend Solution</p>
+
+<form id="myForm" method="post" action="{% url 'getBooksData' %}">
+    {% csrf_token %}
+    <div>
+        <label for="cars">Choose a category:</label>
+        <select name="selected_name" id="cars" onchange="submitForm()" class="select2">
+            {% for value in name %}
+                <option value="{{ value.name }}">{{ value.name }}</option>
+            {% endfor %}
+        </select>
+        <input type="text" id="searchInput" onkeyup="searchFunction()" placeholder="Search...">
+    </div>
+</form>
+{% if authDetails %}
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Birth Year</th>
+                <th>Death Year</th>
+                <th>Download Count</th>
+                <th>Title</th>
+                <th>Language</th>
+                <th>Subject</th>
+                <th>URL</th>
+            </tr>
+        </thead>
+        <tbody id="tableBody">
+            {% for author in authDetails %}
+                <tr>
+                    <td>{{ author.name }}</td>
+                    <td>{{ author.birth_year }}</td>
+                    <td>{{ author.death_year }}</td>
+                    <td>{{ author.download_count }}</td>
+                    <td>{{ author.title }}</td>
+                    <td>{{ author.language }}</td> 
+                    <td>{{ author.subject }}</td> 
+                    <td><a href="{{ author.downloadUR }}" target="_blank">{{ author.downloadUR }}</a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No author details found.</p>
+{% endif %}
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('.select2').select2();
+    });
+
+    function submitForm() {
+        document.getElementById('myForm').submit();
+    }
+
+    function searchFunction() {
+        var input, filter, table, tr, td, i, txtValue;
+        input = document.getElementById("searchInput");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("tableBody");
+        tr = table.getElementsByTagName("tr");
+        for (i = 0; i < tr.length; i++) {
+            var found = false;
+            var tds = tr[i].getElementsByTagName("td");
+            for (var j = 0; j < tds.length; j++) {
+                td = tds[j];
+                if (td) {
+                    txtValue = td.textContent || td.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        found = true;
+                        break;
+                    }
+                }
+            }
+            if (found) {
+                tr[i].style.display = "";
+            } else {
+                tr[i].style.display = "none";
+            }
+        }
+    }
+</script>
+
+</body>
+</html>
